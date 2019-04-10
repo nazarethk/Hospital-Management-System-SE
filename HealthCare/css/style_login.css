@@ -1,0 +1,47 @@
+.login{
+	display: flex;
+	justify-content: center;
+}
+body{
+	    background: linear-gradient(135deg, #2f89fc 0%, #2cbcbc 100%);
+
+}
+
+input{
+	margin: 10px;
+}
+.p-t-136 {
+    padding-top: 0px;
+}
+
+
+   
+.form-group{
+	display: flex;
+	justify-content: center;
+}
+
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+    display: flex;
+    margin: 10px;
+}
+
+
+.wrap-login {
+ 
+  border-radius: 10px;
+
+}
+
+#login_img{
+	display: flex;
+	justify-content: center;
+	padding-left: 5px;
+	height: 25%;
+	margin-left: auto;
+	margin-right: auto; 
+	margin-bottom: 10px;
+
+}
+
