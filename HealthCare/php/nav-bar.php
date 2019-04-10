@@ -18,8 +18,9 @@
       switch ($_SESSION['user-type']) {
       case 'doctor':
 
-        echo $frontLink.'add_patient.php"> Add Patient '.$endLink;
+        // echo $frontLink.'add_patient.php"> Add Patient '.$endLink;
         echo $frontLink.'patient_info.php"> Upcoming Appointments '.$endLink;
+        echo $frontLink.'request_med_equip.php"> Request Medicine or Equipment '.$endLink;
         break;
       case 'clerk':
         echo $frontLink.'add_patient.php"> Add Patient '.$endLink;

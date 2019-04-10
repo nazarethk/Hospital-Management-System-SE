@@ -48,7 +48,7 @@
                 $_SESSION['user-type'] = 'admin';
             }
 
-            if ($table == 'users' || $table == 'doctors' || $table == 'clerks') {
+            if ($table == 'users' || $table == 'doctors' || $table == 'clerks'|| $table == 'staffs') {
                 $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
 
                 $result = $connection->query($sql);
@@ -57,9 +57,13 @@
                 $_SESSION['fullname'] = $fullname;
                 if ($table == 'users') {
                     $_SESSION['user-type'] = 'normal';
-                } elseif ($table == 'clerks') {
+                } elseif ($table == 'staffs') {
+                    $_SESSION['user-type'] = 'staffs';
+                } 
+                elseif ($table == 'clerks') {
                     $_SESSION['user-type'] = 'clerk';
-                } else {
+                }
+                else {
                     $_SESSION['user-type'] = 'doctor';
 
                     $sqldoc = "SELECT speciality FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
@@ -339,6 +343,15 @@
         if (isset($_SESSION['user-type'])) {
             if ($_SESSION['user-type'] == 'clerk') {
                 echo '<script type="text/javascript">window.location = "all_appointments.php"</script>';
+            }
+        }
+    }
+
+    function noAccessForHRManager()
+    {
+        if (isset($_SESSION['user-type'])) {
+            if ($_SESSION['user-type'] == 'clerk') {
+                echo '<script type="text/javascript">window.location = "admin_hr.php"</script>';
             }
         }
     }
