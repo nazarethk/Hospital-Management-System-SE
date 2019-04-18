@@ -45,9 +45,20 @@
     $_SESSION['wrongPass']=false;
       if (isset($_POST['email'])){
         $type = $_POST['type'];
-        $i = login($_POST['email'],$_POST['password'],$type);
+        if($type=="doctor"){
+          $table="employees";
+        }
+        else if($type=="clerks"){
+          $table="clerks";
+        }
+        else{
+          $table="users";
+        }
+        
+        $i = login($_POST['email'],$_POST['password'],$type,$table);
         if ($i == 1){
           noAccessIfLoggedIn();
+          echo '<script type="text/javascript"> window.location = "../../HealthCare/hr/main/home.php" </script>';
         }
       }
     ?>
@@ -128,9 +139,10 @@
     <div class="form-group">
           
           <select required value=1 class ='form-control' name="type" style="width: 500;">
-                <option value="admin" class="option">Admin</option>
+                <!-- <option value="admin" class="option">Admin</option> -->
                 <option value="clerks" class="option">Clerk</option>
-                <option value="doctors" class="option">Doctor</option>
+                <option value="doctor" class="option">Doctor</option>
+                <option value="hr" class="option">HR Manager</option>
           </select>
     </div>
     <div class="form-group"style="margin-bottom: 0px;">

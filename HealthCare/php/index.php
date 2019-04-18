@@ -46,7 +46,7 @@
  <?php
  $_SESSION['wrongPass']=false;
     if(isset($_POST['lemail'])){
-      $i = login($_POST['lemail'],$_POST['lpassword'],"users");
+      $i = login($_POST['lemail'],$_POST['lpassword'],"patient","users");
       if($i==1){
         echo '<script type="text/javascript"> window.location = "add_patient.php" </script>';
 	  }

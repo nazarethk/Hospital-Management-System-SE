@@ -21,14 +21,16 @@
         return htmlentities($unsafe_data);
     }
 
-    function login($email_id_unsafe, $password_unsafe, $table = 'users')
+    function login($email_id_unsafe, $password_unsafe, $user_type,$table)
     {
         global $connection;
 
         $email_id = secure($email_id_unsafe);
         $password = secure($password_unsafe);
         $password_hashed = hash("sha256", $password);
-        
+       
+
+        //  die($table);
         $sql = "SELECT COUNT(*) FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
         
         $result = $connection->query($sql);
@@ -41,28 +43,32 @@
             $_SESSION['wrongPass']=true;
             return 0;
         } else {
+            $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
+
             echo "<div class='alert alert-success'> <strong>Well done!</strong> Logged In</div>";
             $_SESSION['username'] = $email_id;
 
-            if ($table == 'admin') {
+            $result = $connection->query($sql);
+            // $user_type = $result->fetch_array()['user_type'];
+            if ($user_type == 'admin') {
                 $_SESSION['user-type'] = 'admin';
             }
 
-            if ($table == 'users' || $table == 'doctors' || $table == 'clerks'|| $table == 'staffs') {
-                $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
+            if ($user_type == 'hr' || $user_type == 'doctor' || $user_type == 'patient'|| $user_type == 'clerks') {
+                // $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
 
-                $result = $connection->query($sql);
+                // $result = $connection->query($sql);
 
                 $fullname = $result->fetch_array()['fullname'];
                 $_SESSION['fullname'] = $fullname;
-                if ($table == 'users') {
+                if ($user_type == 'patient') {
                     $_SESSION['user-type'] = 'normal';
-                } elseif ($table == 'staffs') {
-                    $_SESSION['user-type'] = 'staffs';
-                } 
-                elseif ($table == 'clerks') {
-                    $_SESSION['user-type'] = 'clerk';
+                } elseif ($user_type == 'hr') {
+                    $_SESSION['user-type'] = 'hr';
+                } elseif ($user_type == 'clerks') {
+                    $_SESSION['user-type'] = 'clerks';
                 }
+           
                 else {
                     $_SESSION['user-type'] = 'doctor';
 
@@ -341,7 +347,7 @@
     function noAccessForClerk()
     {
         if (isset($_SESSION['user-type'])) {
-            if ($_SESSION['user-type'] == 'clerk') {
+            if ($_SESSION['user-type'] == 'clerks') {
                 echo '<script type="text/javascript">window.location = "all_appointments.php"</script>';
             }
         }
@@ -350,7 +356,7 @@
     function noAccessForHRManager()
     {
         if (isset($_SESSION['user-type'])) {
-            if ($_SESSION['user-type'] == 'clerk') {
+            if ($_SESSION['user-type'] == 'hr') {
                 echo '<script type="text/javascript">window.location = "admin_hr.php"</script>';
             }
         }
