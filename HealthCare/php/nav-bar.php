@@ -20,8 +20,8 @@
 
         // echo $frontLink.'add_patient.php"> Add Patient '.$endLink;
         echo $frontLink.'patient_info.php"> Upcoming Appointments '.$endLink;
-        echo $frontLink.'request_med_equip.php"> Request Medicine or Equipment '.$endLink;
-        echo $frontLink.'reserve_room.php"> Reserve a room '.$endLink;
+        echo $frontLink.'request.php"> Request Medicine or Equipment '.$endLink;
+        echo $frontLink.'rooms.php"> Reserve a room '.$endLink;
         break;
       case 'clerks':
         echo $frontLink.'add_patient.php"> Add Patient '.$endLink;

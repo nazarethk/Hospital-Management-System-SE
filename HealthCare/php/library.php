@@ -54,7 +54,7 @@
                 $_SESSION['user-type'] = 'admin';
             }
 
-            if ($user_type == 'hr' || $user_type == 'doctor' || $user_type == 'patient'|| $user_type == 'clerks') {
+            if ($user_type == 'hr' || $user_type == 'doctor' || $user_type == 'patient'|| $user_type == 'clerks'|| $user_type == 'medical_staff') {
                 // $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
 
                 // $result = $connection->query($sql);
@@ -63,9 +63,12 @@
                 $_SESSION['fullname'] = $fullname;
                 if ($user_type == 'patient') {
                     $_SESSION['user-type'] = 'normal';
+                } elseif ($user_type == 'medical_staff') {
+                    $_SESSION['user-type'] = 'medical_staff';
                 } elseif ($user_type == 'hr') {
                     $_SESSION['user-type'] = 'hr';
-                } elseif ($user_type == 'clerks') {
+                } 
+                elseif ($user_type == 'clerks') {
                     $_SESSION['user-type'] = 'clerks';
                 }
            

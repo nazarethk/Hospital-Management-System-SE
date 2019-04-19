@@ -1,37 +1,27 @@
 <?php
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-?>
-<link href="../bootstrap.min.css" rel="stylesheet">
+session_start();
+require("../hr/includes/db_info.php");
 
-<link rel="stylesheet" href="../bootstrap.min.css">
-<!--===============================================================================================-->	
-<link rel="shortcut icon" type="image/png" href="../images/Caduceus-256.png"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../vendor/select2/select2.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../css/util.css">
-	<link rel="stylesheet" type="text/css" href="../css/main.css">
-	<link rel="stylesheet" type="text/css" href="../css/style_login.css">
-	<script src="../loginJS/main.js" defer></script>
-<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
-<?php
-  include 'header.php';
-  include 'library.php';
-  noAccessIfNotLoggedIn();
-  noAccessForNormal();
-  noAccessForClerk();
-  noAccessForAdmin();
+if(isset($_POST['doctor_id']))
+{
+    $doctor_id=$mysqli->real_escape_string($_POST['doctor_id']);
+    
+}
 
-  include("nav-bar.php");
+if(isset($_POST['room_number']))
+{
+    $room_number=$mysqli->real_escape_string($_POST['room_number']);
+    
+}
+else
+{
+    die("dont mess around bro");
+}
+
+    $stmt=$mysqli->prepare("UPDATE `rooms` SET `is_occupied` = '1' WHERE `rooms`.`number` = $room_number;");
+    $stmt1=$mysqli->prepare("UPDATE `rooms` SET `doctor_id` = '$doctor_id' WHERE `rooms`.`number` = $room_number;");
+    $stmt->execute();
+    $stmt1->execute();
+    header("Location: ../php/patient_info.php");
+
 ?>
-<div class = 'container'></div>

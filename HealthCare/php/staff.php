@@ -58,7 +58,13 @@
         $i = login($_POST['email'],$_POST['password'],$type,$table);
         if ($i == 1){
           noAccessIfLoggedIn();
-          echo '<script type="text/javascript"> window.location = "../../HealthCare/hr/main/home.php" </script>';
+          if($type=="hr"){
+            echo '<script type="text/javascript"> window.location = "../../HealthCare/hr/main/home.php" </script>';
+          }
+          else if($type=="medical_staff"){
+            echo '<script type="text/javascript"> window.location = "./medical_staff.php" </script>';
+          }
+          
         }
       }
     ?>
@@ -143,6 +149,7 @@
                 <option value="clerks" class="option">Clerk</option>
                 <option value="doctor" class="option">Doctor</option>
                 <option value="hr" class="option">HR Manager</option>
+                <option value="medical_staff" class="option">Medical Staff</option>
           </select>
     </div>
     <div class="form-group"style="margin-bottom: 0px;">

@@ -41,11 +41,11 @@
             $_SESSION['wrongPass']=true;
             return 0;
         } else {
-            $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
+            $sql = "SELECT fullname id FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
 
             echo "<div class='alert alert-success'> <strong>Well done!</strong> Logged In</div>";
             $_SESSION['username'] = $email_id;
-
+            $_SESSION['id']= $result->fetch_array()['id'];
             $result = $connection->query($sql);
             $user_type = $result->fetch_array()['user_type'];
             if ($user_type == 'admin') {
