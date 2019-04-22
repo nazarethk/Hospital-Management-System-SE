@@ -1,4 +1,4 @@
-# Hospital-Management-System-SE ![Progress](http://progressed.io/bar/99) 
+# Hospital-Management-System-SE ![Progress](http://progressed.io/bar/100) 
 
 ## To-Do List
 - ~~Fix everything related to clerk~~

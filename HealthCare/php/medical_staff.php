@@ -11,7 +11,10 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($id,$request_info);
 
-
+$stmt1=$mysqli->prepare('SELECT id , request_info FROM medicine_requests WHERE is_ordered=1');
+$stmt1->execute();
+$stmt1->store_result();
+$stmt1->bind_result($id,$request_info);
 
 ?>
 <link href="../bootstrap.min.css" rel="stylesheet">
@@ -49,8 +52,8 @@ $stmt->bind_result($id,$request_info);
 
 
 <div class="row">
-          <div class="col-lg-12">
-<h3 style="text-align:center;padding-bottom:10px;">Requests</h3>
+          <div class="col-sm-6">
+<h3 style="text-align:center;padding-bottom:10px;">Pending requests</h3>
 <?php while($stmt->fetch()){
 
 
@@ -66,6 +69,28 @@ $stmt->bind_result($id,$request_info);
   <input type="submit"  class="btn btn-light right" style="display:flex;margin:auto;margin-bottom:15px;" value="Order Request"/>
 </form>
 
+<br>
+
+</tr>
+
+  
+  <br>
+  
+  <?php }?>
+</div>
+
+<div class="col-sm-6">
+<h3 style="text-align:center;padding-bottom:10px;">Made requests</h3>
+<?php while($stmt1->fetch()){
+
+
+?>
+
+<tr>
+
+ 
+<h5 style="text-align:center;">Info: <?=$request_info?></h5>
+<h6 style="text-align:center;color:green;">Order completed!</h6>
 <br>
 
 </tr>

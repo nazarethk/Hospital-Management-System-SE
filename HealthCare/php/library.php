@@ -113,10 +113,11 @@
         $bloodtype = secure($blood_type_unsafe);
 
         $sql;
-
+        $user_type;
         switch ($table) {
             case 'users':
-                $sql = "INSERT INTO $table VALUES ('$email', '$password_hashed', '$fullname','$phonenumber','$bloodtype');";
+            $user_type='patient';
+                $sql = "INSERT INTO $table VALUES ('$email','$user_type' ,'$password_hashed', '$fullname','$phonenumber','$bloodtype');";
                 break;
             
             case 'clerks':
@@ -129,7 +130,7 @@
         if ($connection->query($sql) === true) {
             echo status('record-success');
             if ($table == 'users' && $error_flag == 0) {
-                return login($email, $password);
+                return login($email, $password,$user_type,$table);
             }
         } else {
             echo status('record-fail');

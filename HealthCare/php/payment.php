@@ -61,12 +61,8 @@
     echo "<form action='payment.php' method='post'>";
 
     echo "$link Payment $mid" . "
-
-          <select required value=1 class ='form-control' name='payment' style='width: 500;'>
-                <option value='200' class='option'>200</option>
-                <option value='500' class='option'>500</option>
-                <option value='900' class='option'>900</option>
-          </select>
+          <input type='text' required placeHolder='Enter amount in usd $' class ='form-control' name='payment' style='width: 500;'>
+               
 
     " . "$endingTag";
     
