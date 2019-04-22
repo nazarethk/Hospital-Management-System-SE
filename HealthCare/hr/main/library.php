@@ -41,11 +41,12 @@
             $_SESSION['wrongPass']=true;
             return 0;
         } else {
-            $sql = "SELECT fullname id FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
-
+            $sql = "SELECT fullname, id FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
+            
             echo "<div class='alert alert-success'> <strong>Well done!</strong> Logged In</div>";
             $_SESSION['username'] = $email_id;
             $_SESSION['id']= $result->fetch_array()['id'];
+            die($_SESSION['id']);
             $result = $connection->query($sql);
             $user_type = $result->fetch_array()['user_type'];
             if ($user_type == 'admin') {
@@ -219,15 +220,15 @@
       }
   }
 
-    function appointment_booking($patient_id_unsafe, $specialist_unsafe, $medical_condition_unsafe)
+    function appointment_booking($patient_id_unsafe, $doctor_id_unsafe, $medical_condition_unsafe)
     {
         
         global $connection;
         $patient_id = secure($patient_id_unsafe);
-        $specialist = secure($specialist_unsafe);
+        $doctor_id = secure($doctor_id_unsafe);
         $medical_condition = secure($medical_condition_unsafe);
 
-        $sql = "INSERT INTO appointments VALUES (NULL, $patient_id, '$specialist', '$medical_condition', NULL, NULL, 'no')";
+        $sql = "INSERT INTO appointments VALUES (NULL, $patient_id, '$doctor_id', '$medical_condition', NULL, NULL, 'no')";
 
         if ($connection->query($sql) === true) {
             echo status('appointment-success', $connection->insert_id);
@@ -325,6 +326,13 @@
         global $connection;
 
         return $connection->query("SELECT email FROM $table;");
+    }
+
+    function getAllFromTable($table)
+    {
+        global $connection;
+
+        return $connection->query("SELECT * FROM $table;");
     }
 
     function noAccessForNormal()

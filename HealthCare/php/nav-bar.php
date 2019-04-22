@@ -24,7 +24,7 @@
         echo $frontLink.'rooms.php"> Reserve a room '.$endLink;
         break;
       case 'clerks':
-        echo $frontLink.'add_patient.php"> Add Patient '.$endLink;
+        // echo $frontLink.'add_patient.php"> Add Patient '.$endLink;
         echo $frontLink.'patient_info.php"> All Appointments '.$endLink;
         break;
       default:

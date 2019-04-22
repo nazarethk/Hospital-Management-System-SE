@@ -48,8 +48,9 @@
 				</tr>
 	</thead>
 <?php
-    $speciality = $_SESSION['speciality'];
-    $result = getPatientsFor($speciality);
+    $doctor_id = $_SESSION['id'];
+   
+    $result = getPatientsFor($doctor_id);
 
     while ($row = $result->fetch_array()) {
         $status = ' ';
@@ -66,7 +67,7 @@
         echo "$link".$row['full_name']."$endingTag";
         echo "$link".$row['medical_condition']."$endingTag";
         
-        // echo "$link".$row['doctors_suggestion']."$endingTag";
+         echo "$link".$row['date']."$endingTag";
         echo '</tr>';
     }
 ?>

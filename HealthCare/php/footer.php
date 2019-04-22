@@ -16,7 +16,7 @@
                    echo '<p style="font-style: oblique;">For security reasons, in order to gain access to admin panel, <a href="mailto:admin@healthcare.com">contact us!</a></p>';
                     }
                   ?>
-        Made and managed by Nazareth Keshishian & Jimmy Khalil - <?php echo date('Y'); ?>
+        Made and managed by TANK Team  - <?php echo date('Y'); ?>
         </h5>
       </footer>
     </div>

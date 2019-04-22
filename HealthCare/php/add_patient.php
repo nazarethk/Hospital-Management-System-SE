@@ -19,62 +19,14 @@
   <h2>Welcome, <?php echo $_SESSION["fullname"];?>!</h2>
 
   <?php 
+  $date=date("Y/m/d");
+  echo $date;
   if ($_SESSION["user-type"] == 'normal') {
       echo '
      
-          <div class="row">
-          <div class="col-sm-4">
-      <h2 style="text-align:center;">Search a Doc</h2>
-      
-      <div class="find_content_div" style="width:min-content;">
-      <div class="search_title" style="text-align: center;">Search by Name</div> 
-      <div class="input_padding ">
-      <!-- Auto Complete Input Begin -->
-      <input type="text" id="txtDoctorName" name="q" class="box2" style="width: 300px;" autocomplete="off">
-      <!-- Auto Complete Input End -->
-      </div>
-      <br>
-      <div class="search_title2" style="text-align: center;">Search by Specialty</div> 
-      <div class="select_height">
-          <select class="select" id="drpSpecialty" style="width: 300px;">
-              <option value="-1">Please Select a Specialty</option>
-              <option value="0">All</option>
-              <option value="363">Anatomic Pathology &amp; Cytology</option>
-              <option value="364">Anatomic Pathology, Cytology &amp; Laboratory Medicine</option>
-              <option value="365">Anesthesiology</option><option value="366">Audiology</option>
-              <option value="367">Blood Banking &amp; Transfusion Medicine</option>
-              </div>
-      <br>
-      <br>
-     
-      <div class="input_padding ">
-      <!-- Auto Complete Input Begin -->
-      <input type="text" id="txtSearchKeywords" style="color:Red; display:none;" class="box2">
-      <!-- Auto Complete Input End -->
-      </div>
-      
-      <div style="height:10px;padding-top:10px">
-      <label id="lblSearchError" style="color:Red; display:none;">* Please type in name or select a speciality</label>
-      </div>
-      
-      <div class="find_doctor_button" style="padding-top:20px;padding-bottom:0px;width:auto">
-      
-          <div style="background-color:#3B8BC7;border:1px #E7E8E9 solid;color:#E7E8E9;padding-left:5px;padding-right:5px;padding-top:2px;padding-bottom:1px; width:auto; text-align:center">
-             <a href="#inline_search_content" id="inlineAnchor" style="text-decoration:none;color:#E7E8E9;"><span id="afind_doctor_button">Find a Doctor</span></a>
-       </div>
-      
-          <!--a href="#inline_search_content" id="inlineAnchor">
-              <img id="afind_doctor_button" width="85" height="18" border="0" title="Find a Doctor" alt="Find a Doctor" src="/SiteCollectionImages/AUBMCWEB/find_a_doctor.gif" />
-          </a-->
           
-      </div>
       
-      </div>
-      </div>
-      
-      
-      
-      <div class="col-sm-8">
+      <div class="col-sm-12">
 
       <h2 style="text-align:center;">Take an Appointment</h2>
       <div class="alert alert-info">
@@ -88,6 +40,8 @@
 
             <form action="add_patient.php" method="POST">
 
+           
+            
             <div class="form-group" >
               <label for="usr">Full Name:</label>
               <input type="text" class="form-control" id="usr" name="apfullname" required>
@@ -109,19 +63,29 @@
               <label for="pwd">Address:</label>
               <textarea class="form-control" id="pwd" name="apaddress" required></textarea>
             </div>
-
-            <div class="form-group">
+            ';
+          }
+          ?>
+          
+           <div class="form-group">
               <label for="pwd">Doctor Needed:</label>
-              <select required value=1 name="apSpecialist">
-                <option value="Audiologist" class="option">Audiologist - Ear Expert</option>
-                <option value="Allergist" class="option">Allergist - Allergy Expert</option>
-                <option value="Anesthesiologist" class="option">Anesthesiologist - Anesthetic Expert</option>
-                <option value="Cardiologist" class="option">Cardiologist - Heart Expert</option>
-                <option value="Dentist" class="option">Dentist - Oral Care Expert</option>
-                <option value="Dermatologist" class="option">Dermatologist - Skin Expert</option>
-                <option value="Endocrinologist" class="option">Endocrinologist - Endocrine Expert</option>
-              </select>
+              <select class='input100' style="background-color:white" required value="1" name="doctor_id">
+            <?php 
+                $result = getAllFromTable('employees');
+
+                if(is_bool($result)){
+                  echo "No clerks found in database";
+                }else{
+                  while($row = $result->fetch_array())
+                  {
+                    echo "<option value='" . $row['id'] .  "'>" . $row['fullname'] . " / ". $row['speciality']."</option>";
+                  }
+                }
+
+            ?>
+            </select>
             </div>
+  
            
 
             <div class="form-group">
@@ -136,6 +100,7 @@
               <option value="B-" class="option">B-</option>
             </select>
         </div>
+        <input type="hidden" id="date" name="date" value="<?php echo date("Y-m-d"); ?>"/>
 
             <div class="form-group">
               <label for="pwd">Medical Condition / Purpose of visit:</label>
@@ -151,15 +116,12 @@
                 </div>
                
       
-      ';
-  }
-  ?>
-
   
+
 <?php
           if(isset($_POST["apfullname"])){
             $i = enter_patient_info($_POST["apfullname"],$_POST["apAge"],$_POST["apweight"],$_POST["apphone_no"],$_POST["apaddress"],$_POST["aBloodType"]);
-            appointment_booking($i, $_POST["apSpecialist"], $_POST["apCondition"]);
+            appointment_booking($i, $_POST["doctor_id"], $_POST["apCondition"], $_POST["date"]);
             unset($_POST["apfullname"]); //unset all post variables
             if (isset($_POST["apfullname"])){
               echo '<script type="text/javascript">location.reload();</script>';
@@ -172,3 +134,15 @@
 <?php
   include("footer.php");
 ?>
+ <!-- <div class="form-group">
+              <label for="pwd">Doctor Needed:</label>
+              <select required value=1 name="apSpecialist">
+                <option value="Audiologist" class="option">Audiologist - Ear Expert</option>
+                <option value="Allergist" class="option">Allergist - Allergy Expert</option>
+                <option value="Anesthesiologist" class="option">Anesthesiologist - Anesthetic Expert</option>
+                <option value="Cardiologist" class="option">Cardiologist - Heart Expert</option>
+                <option value="Dentist" class="option">Dentist - Oral Care Expert</option>
+                <option value="Dermatologist" class="option">Dermatologist - Skin Expert</option>
+                <option value="Endocrinologist" class="option">Endocrinologist - Endocrine Expert</option>
+              </select>
+            </div> -->

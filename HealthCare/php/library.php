@@ -31,11 +31,20 @@
        
 
         //  die($table);
-        $sql = "SELECT COUNT(*) FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
-        
+        if($table=="employees"||$table=="clerks"){
+            $sql = "SELECT COUNT(*) FROM $table WHERE email = '$email_id'  AND password = '$password_hashed';";
+        }
+        else{
+            $sql = "SELECT COUNT(*) FROM $table WHERE email = '$email_id' AND user_type = '$user_type' AND password = '$password_hashed';";
+        }
+   
         $result = $connection->query($sql);
-
-        $num_rows = (int) $result->fetch_array()['0'];
+        if($result){
+            $num_rows = (int) $result->fetch_array()['0'];
+        }
+        else{
+            $num_rows=0;
+        }
 
         if ($num_rows > 1) {
               return 0;
@@ -43,7 +52,7 @@
             $_SESSION['wrongPass']=true;
             return 0;
         } else {
-            $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
+            $sql = "SELECT * FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
 
             echo "<div class='alert alert-success'> <strong>Well done!</strong> Logged In</div>";
             $_SESSION['username'] = $email_id;
@@ -58,9 +67,10 @@
                 // $sql = "SELECT fullname FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
 
                 // $result = $connection->query($sql);
-
                 $fullname = $result->fetch_array()['fullname'];
                 $_SESSION['fullname'] = $fullname;
+                
+
                 if ($user_type == 'patient') {
                     $_SESSION['user-type'] = 'normal';
                 } elseif ($user_type == 'medical_staff') {
@@ -73,6 +83,10 @@
                 }
            
                 else {
+                    $sql1 = "SELECT id FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
+                    $result1 = $connection->query($sql1);
+                $id=$result1->fetch_array()['id'];
+                $_SESSION['id'] = $id;
                     $_SESSION['user-type'] = 'doctor';
 
                     $sqldoc = "SELECT speciality FROM $table WHERE email = '$email_id' AND password = '$password_hashed';";
@@ -223,23 +237,23 @@
       }
   }
 
-    function appointment_booking($patient_id_unsafe, $specialist_unsafe, $medical_condition_unsafe)
-    {
-        
-        global $connection;
-        $patient_id = secure($patient_id_unsafe);
-        $specialist = secure($specialist_unsafe);
-        $medical_condition = secure($medical_condition_unsafe);
+  function appointment_booking($patient_id_unsafe, $doctor_id_unsafe, $medical_condition_unsafe,$date_unsafe)
+  {
+      
+      global $connection;
+      $patient_id = secure($patient_id_unsafe);
+      $doctor_id = secure($doctor_id_unsafe);
+      $medical_condition = secure($medical_condition_unsafe);
+      $date=secure($date_unsafe);
+      $sql = "INSERT INTO appointments VALUES (NULL, $patient_id, '$doctor_id', '$medical_condition', '$date', NULL, NULL, 'no')";
 
-        $sql = "INSERT INTO appointments VALUES (NULL, $patient_id, '$specialist', '$medical_condition', NULL, NULL, 'no')";
-
-        if ($connection->query($sql) === true) {
-            echo status('appointment-success', $connection->insert_id);
-        } else {
-            echo status('appointment-fail');
-            echo 'Error: '.$sql.'<br>'.$connection->error;
-        }
-    }
+      if ($connection->query($sql) === true) {
+          echo status('appointment-success', $connection->insert_id);
+      } else {
+          echo status('appointment-fail');
+          echo 'Error: '.$sql.'<br>'.$connection->error;
+      }
+  }
 
     function update_appointment_info($appointment_no_unsafe, $column_name_unsafe, $data_unsafe, $case_unsafe='no')
     {
@@ -271,18 +285,18 @@
         }
     }
 
-    function getPatientsFor($doctor)
+    function getPatientsFor($doctor_id)
     {
         global $connection;
 
-        return $connection->query("SELECT appointment_no, full_name, medical_condition, doctors_suggestion FROM patient_info, appointments where speciality='$doctor' AND patient_info.patient_id = appointments.patient_id");
+        return $connection->query("SELECT * FROM patient_info, appointments where doctor_id='$doctor_id' AND patient_info.patient_id = appointments.patient_id AND appointments.case_closed != 'yes'");
     }
 
     function getAllAppointments()
     {
         global $connection;
 
-        return $connection->query("SELECT appointment_no, full_name,speciality, case_closed, payment_amount FROM patient_info, appointments where patient_info.patient_id = appointments.patient_id");
+        return $connection->query("SELECT * FROM patient_info, appointments where patient_info.patient_id = appointments.patient_id");
     }
 
     function getAllPatientDetail($appointment_no)
@@ -329,6 +343,13 @@
         global $connection;
 
         return $connection->query("SELECT email FROM $table;");
+    }
+
+    function getAllFromTable($table)
+    {
+        global $connection;
+
+        return $connection->query("SELECT * FROM $table;");
     }
 
     function noAccessForNormal()
